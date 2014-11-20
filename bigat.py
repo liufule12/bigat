@@ -1,22 +1,42 @@
 __author__ = 'Fule Liu'
 
+"""
+百度贴吧大召唤之术。
+注意：由于贴吧规则，每次召唤最多召唤5人。
+"""
+
 from urllib import request
-from bs4 import BeautifulSoup
 import re
 
+from bs4 import BeautifulSoup
 
-webpage = request.urlopen('http://tieba.baidu.com/p/3418442865')
-soup = BeautifulSoup(webpage)
 
-lis = soup.find_all('li', {'class': 'd_name'})
+TEST_URL = 'http://tieba.baidu.com/p/3418442865'
 
-users_tags = soup.find_all('a', {'alog-group': 'p_author'})
 
-users = [re.search(r">(.+)</a>", str(tag)).group(1) for tag in users_tags]
+def at(url, way=1):
+    """召唤。
+    url     target url
+    way     1 means @ in horizontal, 2 means @ in vertical.
+    """
+    soup = BeautifulSoup(request.urlopen(url))
 
-users_at = ''
+    users_tags = soup.find_all('a', {'alog-group': 'p_author'})
+    users = [re.search(r">(.+)</a>", str(tag)).group(1) for tag in users_tags]
 
-for user in users:
-    users_at += '@' + user + ' '
+    users_at = ''
 
-print(users_at)
+    # 横排@.
+    if way == 1:
+        for user in users:
+            users_at += '@' + user + ' '
+    # 竖排@.
+    elif way == 2:
+        for user in users:
+            users_at += '@' + user + ' ' + '\n'
+
+    return users_at
+
+
+if __name__ == '__main__':
+    print(at(TEST_URL, way=2))
