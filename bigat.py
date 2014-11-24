@@ -3,6 +3,8 @@ __author__ = 'Fule Liu'
 """
 百度贴吧大召唤之术。
 注意：由于贴吧规则，每次召唤最多召唤5人。
+
+TODO: 增加UI, 保存常用ID.
 """
 
 from urllib import request
